@@ -1,136 +1,225 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Stack;
+import net.salesianos.participante.Participante;
 import net.salesianos.pelicula.Pelicula;
 import net.salesianos.pedido.Pedido;
-import net.salesianos.participante.Participante;
 
 public class App {
 
     public static void main(String[] args) {
-        ArrayList<Pelicula> peliculas = cargarPeliculas("src/peliculas.csv");
-        ArrayList<Pedido> pedidos = crearPedidos();
-        ArrayList<Participante> participantes = crearParticipantes();
+        actividad1Pedidos();
 
-        Scanner teclado = new Scanner(System.in);
-        int opcion = 0;
+        //Esto es para que cree un espacio entre las actividades
+        System.out.println("\n" + "=".repeat(60) + "\n");
+        
+        actividad2Participantes();
+        
+        System.out.println("\n" + "=".repeat(60) + "\n");
+        
+        actividad3Peliculas();
+    }
 
-        while (opcion != 5) {
-            mostrarMenu();
-            opcion = teclado.nextInt();
-            teclado.nextLine();
-
-            if (opcion == 1) {
-                mostrarPeliculas(peliculas);
-            } else if (opcion == 2) {
-                mostrarResumenPeliculas(peliculas);
-            } else if (opcion == 3) {
-                mostrarPedidos(pedidos);
-            } else if (opcion == 4) {
-                mostrarParticipantes(participantes);
-            } else if (opcion == 5) {
-                System.out.println("Saliendo del programa...");
-            } else {
-                System.out.println("Opción no válida. Elige otra vez.");
+    private static void actividad1Pedidos() {
+        System.out.println("ACTIVIDAD 1: GESTIÓN DE PEDIDOS\n");
+        
+        Queue<Pedido> colaPedidos = new LinkedList<Pedido>();
+        Stack<Pedido> pilaPedidosPreparados = new Stack<Pedido>();
+        
+        colaPedidos.offer(new Pedido("P001", "Carla", "Café con leche", true));
+        colaPedidos.offer(new Pedido("P002", "Mario", "Bocadillo de pollo", false));
+        colaPedidos.offer(new Pedido("P003", "Nerea", "Zumo natural", true));
+        colaPedidos.offer(new Pedido("P004", "Iván", "Tostada integral", false));
+        colaPedidos.offer(new Pedido("P005", "Laura", "Té verde", true));
+        
+        System.out.println("Pedidos pendientes");
+        for (Pedido pedido : colaPedidos) {
+            System.out.println(pedido);
+        }
+        System.out.println();
+        
+        System.out.println("Primer pedido sin eliminar");
+        System.out.println(colaPedidos.peek());
+        System.out.println();
+        
+        System.out.println("Preparando tres pedidos");
+        for (int i = 0; i < 3; i++) {
+            Pedido pedidoPrepared = colaPedidos.poll();
+            if (pedidoPrepared != null) {
+                pilaPedidosPreparados.push(pedidoPrepared);
+                System.out.println("Preparado: " + pedidoPrepared);
             }
         }
-
-        teclado.close();
+        System.out.println();
+        
+        System.out.println("Último pedido preparado");
+        System.out.println(pilaPedidosPreparados.peek());
+        System.out.println();
+        
+        System.out.println("Extrayendo pedido del historial");
+        Pedido pedidoExtraido = pilaPedidosPreparados.pop();
+        System.out.println("Extraído: " + pedidoExtraido);
+        System.out.println();
+        
+        System.out.println("Pedidos pendientes: " + colaPedidos.size());
+        System.out.println("¿Cola vacía? " + colaPedidos.isEmpty());
     }
 
-    private static void mostrarMenu() {
-        System.out.println("Menú");
-        System.out.println("1. Mostrar películas");
-        System.out.println("2. Mostrar resumen de películas");
-        System.out.println("3. Mostrar pedidos");
-        System.out.println("4. Mostrar participantes");
-        System.out.println("5. Salir");
-        System.out.print("Elige una opción: ");
+    private static void actividad2Participantes() {
+        System.out.println("ACTIVIDAD 2: Participantes \n");
+        
+        Set<Participante> participantes = new HashSet<Participante>();
+        
+        Participante[] datosParticipantes = {
+            new Participante("J001", "Adrián", "Junior"),
+            new Participante("J002", "Paula", "Junior"),
+            new Participante("J003", "Samuel", "Senior"),
+            new Participante("J001", "Adrián repetido", "Senior"),
+            new Participante("J004", "Claudia", "Senior"),
+            new Participante("J005", "Diego", "Junior"),
+            new Participante("J006", "Alba", "Experto")
+        };
+        
+        System.out.println("Participantes intentados: " + datosParticipantes.length);
+        
+        for (Participante p : datosParticipantes) {
+            participantes.add(p);
+        }
+        
+        System.out.println("Participantes inscritos: " + participantes.size());
+        System.out.println();
+        
+        System.out.println("Participantes");
+        for (Participante p : participantes) {
+            System.out.println(p);
+        }
+        System.out.println();
+        
+        HashMap<String, Integer> categorias = new HashMap<String, Integer>();
+        
+        for (Participante p : participantes) {
+            if (categorias.containsKey(p.getCategoria())) {
+                categorias.put(p.getCategoria(), categorias.get(p.getCategoria()) + 1);
+            } else {
+                categorias.put(p.getCategoria(), 1);
+            }
+        }
+        
+        System.out.println("Participantes por categoría");
+        for (String categoria : categorias.keySet()) {
+            System.out.println(categoria + ": " + categorias.get(categoria));
+        }
+        System.out.println();
+        
+        if (categorias.containsKey("Junior")) {
+            System.out.println("Participantes Junior: " + categorias.get("Junior"));
+        }
+        System.out.println();
+        
+        if (categorias.containsKey("Experto")) {
+            categorias.remove("Experto");
+            System.out.println("Categoría 'Experto' eliminada.");
+        }
+        System.out.println();
+        
+        System.out.println("Claves del mapa: " + categorias.keySet());
     }
 
-    private static ArrayList<Pelicula> cargarPeliculas(String ruta) {
-        ArrayList<Pelicula> lista = new ArrayList<Pelicula>();
+    private static void actividad3Peliculas() {
+        System.out.println("ACTIVIDAD 3: PELÍCULAS\n");
+        
+        ArrayList<Pelicula> peliculas = new ArrayList<Pelicula>();
+        
         try {
-            Scanner lector = new Scanner(new File(ruta));
+            Scanner lector = new Scanner(new File("src/peliculas.csv"));
+            
             if (lector.hasNextLine()) {
                 lector.nextLine();
             }
+            
             while (lector.hasNextLine()) {
                 String linea = lector.nextLine();
                 String[] partes = linea.split(",");
+                
                 if (partes.length == 3) {
                     String titulo = partes[0];
                     String genero = partes[1];
                     int duracion = Integer.parseInt(partes[2].trim());
-                    lista.add(new Pelicula(titulo, genero, duracion));
+                    
+                    peliculas.add(new Pelicula(titulo, genero, duracion));
                 }
             }
             lector.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("No se ha encontrado el fichero de películas.");
-        }
-        return lista;
-    }
-
-    private static ArrayList<Pedido> crearPedidos() {
-        ArrayList<Pedido> pedidos = new ArrayList<Pedido>();
-        pedidos.add(new Pedido("P001", "Laura", "Palomitas", true));
-        pedidos.add(new Pedido("P002", "Carlos", "Refresco", false));
-        pedidos.add(new Pedido("P003", "Ana", "Bocadillo", true));
-        return pedidos;
-    }
-
-    private static ArrayList<Participante> crearParticipantes() {
-        ArrayList<Participante> participantes = new ArrayList<Participante>();
-        participantes.add(new Participante("J01", "Lucía", "Junior"));
-        participantes.add(new Participante("J02", "Miguel", "Senior"));
-        participantes.add(new Participante("J03", "Sofía", "Elite"));
-        return participantes;
-    }
-
-    private static void mostrarPeliculas(ArrayList<Pelicula> peliculas) {
-        System.out.println("--- Películas disponibles ---");
-        for (Pelicula pelicula : peliculas) {
-            System.out.println(pelicula);
-        }
-        System.out.println();
-    }
-
-    private static void mostrarResumenPeliculas(ArrayList<Pelicula> peliculas) {
-        System.out.println("--- Resumen de películas ---");
-        System.out.println("Total de películas: " + peliculas.size());
-        if (peliculas.size() > 0) {
-            Pelicula masLarga = peliculas.get(0);
-            int contadorCienciaFiccion = 0;
-            for (Pelicula pelicula : peliculas) {
-                if (pelicula.getDuracionMinutos() > masLarga.getDuracionMinutos()) {
-                    masLarga = pelicula;
-                }
-                if (pelicula.getGenero().equalsIgnoreCase("Ciencia ficción")) {
-                    contadorCienciaFiccion++;
+            
+            System.out.println("Películas cargadas");
+            for (Pelicula p : peliculas) {
+                System.out.println(p);
+            }
+            System.out.println();
+            
+            int totalPeliculas = peliculas.size();
+            int duracionTotal = 0;
+            Pelicula peliculaMasLarga = peliculas.get(0);
+            
+            for (Pelicula p : peliculas) {
+                duracionTotal += p.getDuracionMinutos();
+                if (p.getDuracionMinutos() > peliculaMasLarga.getDuracionMinutos()) {
+                    peliculaMasLarga = p;
                 }
             }
-            System.out.println("Película más larga: " + masLarga);
-            System.out.println("Películas de ciencia ficción: " + contadorCienciaFiccion);
+            
+            double duracionMedia = (double) duracionTotal / totalPeliculas;
+            
+            System.out.println("Estadísticas");
+            System.out.println("Total de películas: " + totalPeliculas);
+            System.out.println("Duración total: " + duracionTotal + " minutos");
+            //Lo del formato lo busque y me lo dío la ia me pareció interesante
+            System.out.println("Duración media: " + String.format("%.2f", duracionMedia) + " minutos");
+            System.out.println("Película más larga: " + peliculaMasLarga);
+            System.out.println();
+            
+            generarResumen(totalPeliculas, duracionTotal, duracionMedia, peliculaMasLarga);
+            System.out.println("Fichero 'resumen_peliculas.txt' generado.");
+            
+            generarLog("Ejecución completada: " + totalPeliculas + " películas procesadas.");
+            System.out.println("Fichero 'log_peliculas.txt' actualizado.");
+            
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: Fichero 'peliculas.csv' no encontrado.");
+            generarLog("Error: Fichero no encontrado.");
         }
-        System.out.println();
     }
 
-    private static void mostrarPedidos(ArrayList<Pedido> pedidos) {
-        System.out.println("--- Pedidos registrados ---");
-        for (Pedido pedido : pedidos) {
-            System.out.println(pedido);
+    private static void generarResumen(int total, int duracionTotal, double duracionMedia, Pelicula masLarga) {
+        try {
+            FileWriter writer = new FileWriter("resumen_peliculas.txt");
+            writer.write("RESUMEN DE PELÍCULAS\n\n");
+            writer.write("Total de películas: " + total + "\n");
+            writer.write("Duración total: " + duracionTotal + " minutos\n");
+            writer.write("Duración media: " + String.format("%.2f", duracionMedia) + " minutos\n");
+            writer.write("Película más larga: " + masLarga + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error al generar el resumen.");
         }
-        System.out.println();
     }
 
-    private static void mostrarParticipantes(ArrayList<Participante> participantes) {
-        System.out.println("--- Participantes inscritos ---");
-        for (Participante participante : participantes) {
-            System.out.println(participante);
+    private static void generarLog(String mensaje) {
+        try {
+            FileWriter writer = new FileWriter("log_peliculas.txt", true);
+            writer.write("[" + java.time.LocalDateTime.now() + "] " + mensaje + "\n");
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error al generar el log.");
         }
-        System.out.println();
     }
 }
