@@ -1,18 +1,53 @@
-## Getting Started
+# UD6T1 - Gestión de Películas, Pedidos y Participantes
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Repositorio didáctico para practicar creación de clases en Java, lectura de ficheros CSV, uso de colecciones y salida por consola. Incluye una clase ejecutable `App` que carga películas desde un CSV y muestra información mediante un menú interactivo.
 
-## Folder Structure
+## Objetivos de la actividad
 
-The workspace contains two folders by default, where:
+- Diseñar clases sencillas (`Pelicula`, `Pedido`, `Participante`).
+- Leer datos desde un fichero CSV (`src/peliculas.csv`).
+- Manipular listas (añadir/recorrer) y mostrar resúmenes.
+- Practicar entrada/salida de consola y control de flujo con un menú.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Estructura del proyecto
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+- `src/` - Código fuente Java
+  - `App.java` - Programa principal/ejecutable con `main`, menú y funciones para cargar y mostrar datos.
+  - `net/salesianos/pelicula/Pelicula.java` - Clase `Pelicula` (atributos: `titulo`, `genero`, `duracionMinutos`).
+  - `net/salesianos/pedido/Pedido.java` - Clase `Pedido` (atributos: `codigo`, `cliente`, `producto`, `paraLlevar`).
+  - `net/salesianos/participante/Participante.java` - Clase `Participante` (atributos: `idJugador`, `nombre`, `categoria`).
+- `src/peliculas.csv` - Fichero CSV con datos de ejemplo (cabecera: `titulo,genero,duracionMinutos`).
+- `bin/` - Salida de compilación (`.class`) generada localmente.
+- `.vscode/settings.json` - Configuración de proyecto Java para VS Code (opcional).
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Contenido y responsabilidad de cada archivo
 
-## Dependency Management
+- `src/App.java`:
+  - Lee `src/peliculas.csv` (salta la cabecera) y carga `Pelicula` en una lista.
+  - Genera listas de ejemplo de `Pedido` y `Participante`.
+  - Presenta un menú con las siguientes opciones:
+    1. Mostrar películas
+    2. Mostrar resumen de películas (total, película más larga, número de ciencia ficción)
+    3. Mostrar pedidos
+    4. Mostrar participantes
+    5. Salir
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+- `src/net/salesianos/pelicula/Pelicula.java`:
+  - Clase simple con constructor, getters/setters y `toString()` para visualización en consola.
+
+- `src/net/salesianos/pedido/Pedido.java`:
+  - Clase con constructor y `toString()`; se puede ampliar con `equals`/`hashCode` si se requiere manejo en colecciones.
+
+- `src/net/salesianos/participante/Participante.java`:
+  - Clase con `equals` y `hashCode` ya implementados en el ejemplo.
+
+## Formato del CSV
+
+El fichero `src/peliculas.csv` debe tener una cabecera y filas con tres campos separados por comas:
+
+```
+titulo,genero,duracionMinutos
+Interstellar,Ciencia ficción,169
+Shrek,Animación,90
+Gladiator,Acción,155
+```
