@@ -17,24 +17,51 @@ import net.salesianos.pedido.Pedido;
 public class App {
 
     public static void main(String[] args) {
-        actividad1Pedidos();
-
-        //Esto es para que cree un espacio entre las actividades
-        System.out.println("\n" + "=".repeat(60) + "\n");
+        Scanner scanner = new Scanner(System.in);
+        boolean salir = false;
         
-        actividad2Participantes();
+        while (!salir) {
+            System.out.println("MENÚ PRINCIPAL");
+            System.out.println("1. Pedidos");
+            System.out.println("2. Participantes");
+            System.out.println("3. Películas");
+            System.out.println("4. Salir");
+            System.out.print("Selecciona una opción: ");
+            
+            int opcion = scanner.nextInt();
+            
+            switch (opcion) {
+                case 1:
+                    System.out.println("\n" + "=".repeat(60) + "\n");
+                    actividad1Pedidos();
+                    break;
+                case 2:
+                    System.out.println("\n" + "=".repeat(60) + "\n");
+                    actividad2Participantes();
+                    break;
+                case 3:
+                    System.out.println("\n" + "=".repeat(60) + "\n");
+                    actividad3Peliculas();
+                    break;
+                case 4:
+                    System.out.println("\nChao :D\n");
+                    salir = true;
+                    break;
+                default:
+                    System.out.println("\nOpción inválida. Intenta de nuevo.");
+            }
+        }
         
-        System.out.println("\n" + "=".repeat(60) + "\n");
-        
-        actividad3Peliculas();
+        scanner.close();
     }
 
     private static void actividad1Pedidos() {
         System.out.println("ACTIVIDAD 1: GESTIÓN DE PEDIDOS\n");
         
         Queue<Pedido> colaPedidos = new LinkedList<Pedido>();
-        Stack<Pedido> pilaPedidosPreparados = new Stack<Pedido>();
         
+        Stack<Pedido> pilaPedidosPreparados = new Stack<Pedido>();
+    
         colaPedidos.offer(new Pedido("P001", "Carla", "Café con leche", true));
         colaPedidos.offer(new Pedido("P002", "Mario", "Bocadillo de pollo", false));
         colaPedidos.offer(new Pedido("P003", "Nerea", "Zumo natural", true));
@@ -47,16 +74,17 @@ public class App {
         }
         System.out.println();
         
+
         System.out.println("Primer pedido sin eliminar");
         System.out.println(colaPedidos.peek());
         System.out.println();
-        
+      
         System.out.println("Preparando tres pedidos");
         for (int i = 0; i < 3; i++) {
-            Pedido pedidoPrepared = colaPedidos.poll();
-            if (pedidoPrepared != null) {
-                pilaPedidosPreparados.push(pedidoPrepared);
-                System.out.println("Preparado: " + pedidoPrepared);
+            Pedido pedidoPreparado = colaPedidos.poll();
+            if (pedidoPreparado != null) {
+                pilaPedidosPreparados.push(pedidoPreparado);
+                System.out.println("Preparado: " + pedidoPreparado);
             }
         }
         System.out.println();
@@ -77,6 +105,7 @@ public class App {
     private static void actividad2Participantes() {
         System.out.println("ACTIVIDAD 2: Participantes \n");
         
+        // Set para guardar participantes sin duplicados usando el HashSet
         Set<Participante> participantes = new HashSet<Participante>();
         
         Participante[] datosParticipantes = {
@@ -104,6 +133,7 @@ public class App {
         }
         System.out.println();
         
+        // Se usa el HashMap para encontrar mediante la categoria
         HashMap<String, Integer> categorias = new HashMap<String, Integer>();
         
         for (Participante p : participantes) {
@@ -114,32 +144,38 @@ public class App {
             }
         }
         
+
         System.out.println("Participantes por categoría");
         for (String categoria : categorias.keySet()) {
             System.out.println(categoria + ": " + categorias.get(categoria));
         }
         System.out.println();
         
+       
         if (categorias.containsKey("Junior")) {
             System.out.println("Participantes Junior: " + categorias.get("Junior"));
         }
         System.out.println();
         
+     
         if (categorias.containsKey("Experto")) {
             categorias.remove("Experto");
             System.out.println("Categoría 'Experto' eliminada.");
         }
         System.out.println();
         
+     
         System.out.println("Claves del mapa: " + categorias.keySet());
     }
 
     private static void actividad3Peliculas() {
         System.out.println("ACTIVIDAD 3: PELÍCULAS\n");
         
+    
         ArrayList<Pelicula> peliculas = new ArrayList<Pelicula>();
         
         try {
+            //Se usa Scanner lector para leer el fichero que nos da el profesor
             Scanner lector = new Scanner(new File("src/peliculas.csv"));
             
             if (lector.hasNextLine()) {
@@ -179,10 +215,10 @@ public class App {
             
             double duracionMedia = (double) duracionTotal / totalPeliculas;
             
+
             System.out.println("Estadísticas");
             System.out.println("Total de películas: " + totalPeliculas);
             System.out.println("Duración total: " + duracionTotal + " minutos");
-            //Lo del formato lo busque y me lo dío la ia me pareció interesante
             System.out.println("Duración media: " + String.format("%.2f", duracionMedia) + " minutos");
             System.out.println("Película más larga: " + peliculaMasLarga);
             System.out.println();
@@ -194,6 +230,7 @@ public class App {
             System.out.println("Fichero 'log_peliculas.txt' actualizado.");
             
         } catch (FileNotFoundException e) {
+            // Si no encuentra el fichero te manda este error: lo añadi ya que basicamente queria poner algo extra que era sencillo
             System.out.println("Error: Fichero 'peliculas.csv' no encontrado.");
             generarLog("Error: Fichero no encontrado.");
         }
@@ -205,10 +242,12 @@ public class App {
             writer.write("RESUMEN DE PELÍCULAS\n\n");
             writer.write("Total de películas: " + total + "\n");
             writer.write("Duración total: " + duracionTotal + " minutos\n");
+            //El .format con los datos dados sirve para que siempre se muestre con exactamente dos decimales y así quede mas bonito
             writer.write("Duración media: " + String.format("%.2f", duracionMedia) + " minutos\n");
             writer.write("Película más larga: " + masLarga + "\n");
             writer.close();
         } catch (IOException e) {
+            //Lo mismo te manda el error con este, mensaje
             System.out.println("Error al generar el resumen.");
         }
     }
@@ -219,7 +258,10 @@ public class App {
             writer.write("[" + java.time.LocalDateTime.now() + "] " + mensaje + "\n");
             writer.close();
         } catch (IOException e) {
+            //Y otro control de errores.
             System.out.println("Error al generar el log.");
         }
     }
 }
+
+// Se que no se pide control de errores pero no tardo mucho en añadirlo y tenia que distraerme con algo
